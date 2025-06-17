@@ -1,1 +1,1081 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flamengo Aluguel de Veículos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .flamengo-gradient {
+            background: linear-gradient(135deg, #cc0000 0%, #000000 100%);
+        }
+        .sidebar {
+            transition: all 0.3s;
+        }
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.3);
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .status-available {
+            background-color: #10b981;
+        }
+        .status-rented {
+            background-color: #ef4444;
+        }
+        .status-maintenance {
+            background-color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Login Page (visible by default) -->
+    <div id="loginPage" class="min-h-screen flex flex-col md:flex-row" style="display: flex;">
+        <!-- Left Side - Branding and Info -->
+        <div class="w-full md:w-1/2 flamengo-gradient text-white p-10 flex flex-col justify-center items-center">
+            <div class="max-w-md">
+                <div class="flex items-center mb-8">
+                    <i class="fas fa-car text-3xl mr-3 text-red-300"></i>
+                    <h1 class="text-3xl font-bold">Flamengo Aluguel de Veículos</h1>
+                </div>
+                <h2 class="text-2xl font-semibold mb-4">Sistema de Gerenciamento de Locação</h2>
+                <p class="mb-6 opacity-90">
+                    Gerencie sua frota de veículos com a paixão e eficiência do Flamengo!
+                </p>
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-2 text-red-300"></i>
+                        <span>Controle total da frota rubro-negra</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-2 text-red-300"></i>
+                        <span>Gestão de clientes e reservas</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-2 text-red-300"></i>
+                        <span>Relatórios financeiros detalhados</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Right Side - Login Form -->
+        <div class="w-full md:w-1/2 flex items-center justify-center p-8">
+            <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">Acesse sua conta</h2>
+                    <p class="text-gray-600 mt-2">Entre com suas credenciais para acessar o sistema</p>
+                </div>
+
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-gray-400"></i>
+                            </div>
+                            <input type="email" id="email" name="email" required
+                                class="pl-10 w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus transition duration-200"
+                                placeholder="seu@email.com">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input type="password" id="password" name="password" required
+                                class="pl-10 w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus transition duration-200"
+                                placeholder="••••••••">
+                            <button type="button" id="togglePassword" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember" name="remember" type="checkbox"
+                                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                            <label for="remember" class="ml-2 block text-sm text-gray-700">Lembrar-me</label>
+                        </div>
+                        <div class="text-sm">
+                            <a href="#" class="font-medium text-red-600 hover:text-red-500">Esqueceu sua senha?</a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit"
+                            class="w-full flamengo-gradient text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                            Entrar
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Novo no sistema? 
+                        <a href="#" class="font-medium text-red-600 hover:text-red-500">Fale com o administrador</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard (hidden by default until login) -->
+    <div id="dashboard" class="min-h-screen flex flex-col md:flex-row page" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar w-full md:w-64 bg-black text-white p-4 md:min-h-screen">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center">
+                    <i class="fas fa-car text-2xl mr-3 text-red-500"></i>
+                    <h1 class="text-xl font-bold">Flamengo Aluguel</h1>
+                </div>
+                <button id="sidebarToggle" class="md:hidden text-white">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <button onclick="showPage('vehiclesPage')" class="w-full text-left flex items-center px-4 py-2 rounded-lg bg-red-600">
+                            <i class="fas fa-car mr-3"></i>
+                            Veículos
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showPage('addVehiclePage')" class="w-full text-left flex items-center px-4 py-2 rounded-lg hover:bg-gray-800">
+                            <i class="fas fa-plus-circle mr-3"></i>
+                            Cadastrar Veículo
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showPage('usersPage')" class="w-full text-left flex items-center px-4 py-2 rounded-lg hover:bg-gray-800">
+                            <i class="fas fa-users mr-3"></i>
+                            Usuários
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showPage('addUserPage')" class="w-full text-left flex items-center px-4 py-2 rounded-lg hover:bg-gray-800">
+                            <i class="fas fa-user-plus mr-3"></i>
+                            Cadastrar Usuário
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showPage('documentsPage')" class="w-full text-left flex items-center px-4 py-2 rounded-lg hover:bg-gray-800">
+                            <i class="fas fa-file-alt mr-3"></i>
+                            Documentos
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showPage('creditsPage')" class="w-full text-left flex items-center px-4 py-2 rounded-lg hover:bg-gray-800">
+                            <i class="fas fa-code mr-3"></i>
+                            Créditos
+                        </button>
+                    </li>
+                    <li class="pt-4 mt-4 border-t border-gray-700">
+                        <button onclick="logout()" class="w-full text-left flex items-center px-4 py-2 rounded-lg hover:bg-gray-800">
+                            <i class="fas fa-sign-out-alt mr-3"></i>
+                            Sair
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <!-- Vehicles Page -->
+            <div id="vehiclesPage" class="page active">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Frota de Veículos</h2>
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar veículo..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Modelo</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marca</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ano</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Placa</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alugado por</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="vehiclesTableBody">
+                                <!-- Vehicles will be added here dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Vehicle Page -->
+            <div id="addVehiclePage" class="page">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Cadastrar Novo Veículo</h2>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <form id="addVehicleForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="vehicleBrand" class="block text-sm font-medium text-gray-700 mb-1">Marca</label>
+                                <input type="text" id="vehicleBrand" name="brand" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                            <div>
+                                <label for="vehicleModel" class="block text-sm font-medium text-gray-700 mb-1">Modelo</label>
+                                <input type="text" id="vehicleModel" name="model" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                            <div>
+                                <label for="vehicleYear" class="block text-sm font-medium text-gray-700 mb-1">Ano</label>
+                                <input type="number" id="vehicleYear" name="year" required min="1900" max="2099"
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                            <div>
+                                <label for="vehiclePlate" class="block text-sm font-medium text-gray-700 mb-1">Placa</label>
+                                <input type="text" id="vehiclePlate" name="plate" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                            <div>
+                                <label for="vehicleColor" class="block text-sm font-medium text-gray-700 mb-1">Cor</label>
+                                <input type="text" id="vehicleColor" name="color" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                            <div>
+                                <label for="vehicleStatus" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <select id="vehicleStatus" name="status" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                                    <option value="available">Disponível</option>
+                                    <option value="rented">Alugado</option>
+                                    <option value="maintenance">Manutenção</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <label for="vehicleDescription" class="block text-sm font-medium text-gray-700 mb-1">Descrição/Observações</label>
+                            <textarea id="vehicleDescription" name="description" rows="3"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus"></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end mt-6">
+                            <button type="button" onclick="showPage('vehiclesPage')" class="mr-4 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="flamengo-gradient text-white px-4 py-2 rounded-lg hover:opacity-90">
+                                Cadastrar Veículo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Users Page -->
+            <div id="usersPage" class="page">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Usuários do Sistema</h2>
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar usuário..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">E-mail</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CPF</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="usersTableBody">
+                                <!-- Users will be added here dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add User Page -->
+            <div id="addUserPage" class="page">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Cadastrar Novo Usuário</h2>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <form id="addUserForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="userName" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                                <input type="text" id="userName" name="name" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                            <div>
+                                <label for="userEmail" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                                <input type="email" id="userEmail" name="email" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                            <div>
+                                <label for="userPassword" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                                <input type="password" id="userPassword" name="password" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                            <div>
+                                <label for="userType" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Usuário</label>
+                                <select id="userType" name="type" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                                    <option value="admin">Administrador</option>
+                                    <option value="manager">Gerente</option>
+                                    <option value="employee">Funcionário</option>
+                                    <option value="client">Cliente</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="userCpf" class="block text-sm font-medium text-gray-700 mb-1">CPF</label>
+                                <input type="text" id="userCpf" name="cpf" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                            <div>
+                                <label for="userPhone" class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                                <input type="tel" id="userPhone" name="phone" required
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <label for="userAddress" class="block text-sm font-medium text-gray-700 mb-1">Endereço</label>
+                            <textarea id="userAddress" name="address" rows="2"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus"></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end mt-6">
+                            <button type="button" onclick="showPage('usersPage')" class="mr-4 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="flamengo-gradient text-white px-4 py-2 rounded-lg hover:opacity-90">
+                                Cadastrar Usuário
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Documents Page -->
+            <div id="documentsPage" class="page">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Documentos e Manutenção</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Documents Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-file-alt mr-2"></i> Documentos dos Veículos
+                            </h3>
+                            <button onclick="showAddDocumentModal()" class="text-sm text-red-600 hover:text-red-800">
+                                <i class="fas fa-plus mr-1"></i> Adicionar
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="border-b pb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium">CRLV - Onix 2020</span>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">Válido</span>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    <p>Vencimento: 15/08/2024</p>
+                                    <p>Placa: ABC1D23</p>
+                                </div>
+                            </div>
+                            
+                            <div class="border-b pb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium">Seguro - HB20 2021</span>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">Vence em 30 dias</span>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    <p>Vencimento: 30/07/2023</p>
+                                    <p>Placa: XYZ9W87</p>
+                                </div>
+                            </div>
+                            
+                            <div class="border-b pb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium">CRLV - Corolla 2019</span>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-800">Vencido</span>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    <p>Vencimento: 10/05/2023</p>
+                                    <p>Placa: DEF4G56</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Maintenance Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-tools mr-2"></i> Histórico de Manutenção
+                            </h3>
+                            <button onclick="showAddMaintenanceModal()" class="text-sm text-red-600 hover:text-red-800">
+                                <i class="fas fa-plus mr-1"></i> Registrar
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="border-b pb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium">Troca de Óleo - Onix 2020</span>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">Concluído</span>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    <p>Data: 12/06/2023</p>
+                                    <p>Próxima: 12/09/2023</p>
+                                    <p>Placa: ABC1D23</p>
+                                </div>
+                            </div>
+                            
+                            <div class="border-b pb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium">Revisão Geral - HB20 2021</span>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800">Agendado</span>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    <p>Data: 25/07/2023</p>
+                                    <p>Placa: XYZ9W87</p>
+                                </div>
+                            </div>
+                            
+                            <div class="border-b pb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium">Troca de Pneus - Corolla 2019</span>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800">Pendente</span>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    <p>Data: -</p>
+                                    <p>Placa: DEF4G56</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credits Page -->
+            <div id="creditsPage" class="page">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Créditos</h2>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center mb-6">
+                        <i class="fas fa-car text-3xl mr-3 text-red-500"></i>
+                        <h3 class="text-xl font-semibold">Flamengo Aluguel de Veículos</h3>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-800 mb-2">Desenvolvido por:</h4>
+                            <ul class="space-y-2 pl-5">
+                                <li class="flex items-center">
+                                    <i class="fas fa-user-tie text-red-600 mr-2"></i>
+                                    <span>Equipe de Desenvolvimento Flamengo</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-code text-red-600 mr-2"></i>
+                                    <span>Programadores Rubro-Negros</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-800 mb-2">Tecnologias utilizadas:</h4>
+                            <div class="flex flex-wrap gap-3">
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm flex items-center">
+                                    <i class="fab fa-html5 text-red-600 mr-1"></i> HTML5
+                                </span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm flex items-center">
+                                    <i class="fab fa-css3-alt text-red-600 mr-1"></i> CSS3
+                                </span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm flex items-center">
+                                    <i class="fab fa-js text-red-600 mr-1"></i> JavaScript
+                                </span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm flex items-center">
+                                    <i class="fab fa-font-awesome text-red-600 mr-1"></i> Font Awesome
+                                </span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm flex items-center">
+                                    <i class="fas fa-wind text-red-600 mr-1"></i> Tailwind CSS
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-800 mb-2">Agradecimentos especiais:</h4>
+                            <p class="text-gray-600">
+                                À Nação Rubro-Negra por inspirar este projeto com paixão e dedicação.
+                            </p>
+                        </div>
+                        
+                        <div class="border-t pt-4 mt-4">
+                            <p class="text-sm text-gray-500">
+                                &copy; 2023 Flamengo Aluguel de Veículos. Todos os direitos reservados.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Document Modal (hidden by default) -->
+    <div id="addDocumentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Adicionar Documento</h3>
+                <button onclick="hideModal('addDocumentModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="addDocumentForm" class="space-y-4">
+                <div>
+                    <label for="documentVehicle" class="block text-sm font-medium text-gray-700 mb-1">Veículo</label>
+                    <select id="documentVehicle" name="vehicle" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                        <option value="">Selecione um veículo</option>
+                        <option value="1">Onix 2020 - ABC1D23</option>
+                        <option value="2">HB20 2021 - XYZ9W87</option>
+                        <option value="3">Corolla 2019 - DEF4G56</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="documentType" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Documento</label>
+                    <select id="documentType" name="type" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                        <option value="">Selecione o tipo</option>
+                        <option value="crlv">CRLV</option>
+                        <option value="insurance">Seguro</option>
+                        <option value="ipva">IPVA</option>
+                        <option value="other">Outro</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="documentExpiry" class="block text-sm font-medium text-gray-700 mb-1">Data de Vencimento</label>
+                    <input type="date" id="documentExpiry" name="expiry" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                </div>
+                
+                <div>
+                    <label for="documentFile" class="block text-sm font-medium text-gray-700 mb-1">Anexar Documento</label>
+                    <input type="file" id="documentFile" name="file"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                </div>
+                
+                <div class="flex justify-end mt-6">
+                    <button type="button" onclick="hideModal('addDocumentModal')" class="mr-4 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flamengo-gradient text-white px-4 py-2 rounded-lg hover:opacity-90">
+                        Salvar Documento
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Maintenance Modal (hidden by default) -->
+    <div id="addMaintenanceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Registrar Manutenção</h3>
+                <button onclick="hideModal('addMaintenanceModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="addMaintenanceForm" class="space-y-4">
+                <div>
+                    <label for="maintenanceVehicle" class="block text-sm font-medium text-gray-700 mb-1">Veículo</label>
+                    <select id="maintenanceVehicle" name="vehicle" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                        <option value="">Selecione um veículo</option>
+                        <option value="1">Onix 2020 - ABC1D23</option>
+                        <option value="2">HB20 2021 - XYZ9W87</option>
+                        <option value="3">Corolla 2019 - DEF4G56</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="maintenanceType" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Manutenção</label>
+                    <select id="maintenanceType" name="type" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                        <option value="">Selecione o tipo</option>
+                        <option value="oil">Troca de Óleo</option>
+                        <option value="tires">Troca de Pneus</option>
+                        <option value="brakes">Freios</option>
+                        <option value="general">Revisão Geral</option>
+                        <option value="other">Outro</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="maintenanceDate" class="block text-sm font-medium text-gray-700 mb-1">Data</label>
+                    <input type="date" id="maintenanceDate" name="date" required
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                </div>
+                
+                <div>
+                    <label for="maintenanceNextDate" class="block text-sm font-medium text-gray-700 mb-1">Próxima Manutenção</label>
+                    <input type="date" id="maintenanceNextDate" name="nextDate"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                </div>
+                
+                <div>
+                    <label for="maintenanceCost" class="block text-sm font-medium text-gray-700 mb-1">Custo (R$)</label>
+                    <input type="number" id="maintenanceCost" name="cost" step="0.01"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus">
+                </div>
+                
+                <div>
+                    <label for="maintenanceDescription" class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                    <textarea id="maintenanceDescription" name="description" rows="3"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-red-500 input-focus"></textarea>
+                </div>
+                
+                <div class="flex justify-end mt-6">
+                    <button type="button" onclick="hideModal('addMaintenanceModal')" class="mr-4 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flamengo-gradient text-white px-4 py-2 rounded-lg hover:opacity-90">
+                        Registrar Manutenção
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for vehicles
+        const vehicles = [
+            {
+                id: 1,
+                brand: 'Chevrolet',
+                model: 'Onix',
+                year: 2020,
+                plate: 'ABC1D23',
+                color: 'Vermelho',
+                status: 'available',
+                rentedBy: null,
+                description: 'Carro em excelente estado, com ar condicionado direção hidráulica.'
+            },
+            {
+                id: 2,
+                brand: 'Hyundai',
+                model: 'HB20',
+                year: 2021,
+                plate: 'XYZ9W87',
+                color: 'Preto',
+                status: 'rented',
+                rentedBy: 'João Silva',
+                description: 'Veículo completo, com multimídia e câmera de ré.'
+            },
+            {
+                id: 3,
+                brand: 'Toyota',
+                model: 'Corolla',
+                year: 2019,
+                plate: 'DEF4G56',
+                color: 'Vermelho',
+                status: 'maintenance',
+                rentedBy: null,
+                description: 'Carro de luxo, com teto solar e bancos de couro.'
+            }
+        ];
+
+        // Sample data for users
+        const users = [
+            {
+                id: 1,
+                name: 'Admin Master',
+                email: 'admin@flamengoveiculos.com',
+                type: 'admin',
+                cpf: '123.456.789-00',
+                phone: '(21) 99999-9999',
+                address: 'Av. Borges de Medeiros, 997 - Rio de Janeiro/RJ'
+            },
+            {
+                id: 2,
+                name: 'João Silva',
+                email: 'joao@email.com',
+                type: 'client',
+                cpf: '987.654.321-00',
+                phone: '(21) 98888-8888',
+                address: 'Rua das Laranjeiras, 123 - Rio de Janeiro/RJ'
+            },
+            {
+                id: 3,
+                name: 'Maria Souza',
+                email: 'maria@email.com',
+                type: 'manager',
+                cpf: '456.789.123-00',
+                phone: '(21) 97777-7777',
+                address: 'Av. das Américas, 500 - Rio de Janeiro/RJ'
+            }
+        ];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in (for demo purposes)
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn) {
+                showDashboard();
+            } else {
+                document.getElementById('loginPage').style.display = 'flex';
+            }
+            
+            // Populate vehicles table
+            populateVehiclesTable();
+            
+            // Populate users table
+            populateUsersTable();
+        });
+
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        
+        if (togglePassword && password) {
+            togglePassword.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+        }
+
+        // Form validation and login
+        const loginForm = document.getElementById('loginForm');
+        
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Simple validation
+                if (!email || !password) {
+                    loginForm.classList.add('shake');
+                    setTimeout(() => loginForm.classList.remove('shake'), 500);
+                    return;
+                }
+                
+                // Here you would typically send the data to your backend
+                console.log('Login attempt with:', { email, password });
+                
+                // For demo purposes, we'll just log in
+                localStorage.setItem('isLoggedIn', 'true');
+                showDashboard();
+            });
+        }
+
+        // Add vehicle form
+        const addVehicleForm = document.getElementById('addVehicleForm');
+        
+        if (addVehicleForm) {
+            addVehicleForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const brand = document.getElementById('vehicleBrand').value;
+                const model = document.getElementById('vehicleModel').value;
+                const year = document.getElementById('vehicleYear').value;
+                const plate = document.getElementById('vehiclePlate').value;
+                const color = document.getElementById('vehicleColor').value;
+                const status = document.getElementById('vehicleStatus').value;
+                const description = document.getElementById('vehicleDescription').value;
+                
+                // Create new vehicle object
+                const newVehicle = {
+                    id: vehicles.length + 1,
+                    brand,
+                    model,
+                    year: parseInt(year),
+                    plate,
+                    color,
+                    status,
+                    rentedBy: null,
+                    description
+                };
+                
+                // Add to vehicles array
+                vehicles.push(newVehicle);
+                
+                // Update table
+                populateVehiclesTable();
+                
+                // Show vehicles page
+                showPage('vehiclesPage');
+                
+                // Reset form
+                addVehicleForm.reset();
+            });
+        }
+
+        // Add user form
+        const addUserForm = document.getElementById('addUserForm');
+        
+        if (addUserForm) {
+            addUserForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const name = document.getElementById('userName').value;
+                const email = document.getElementById('userEmail').value;
+                const password = document.getElementById('userPassword').value;
+                const type = document.getElementById('userType').value;
+                const cpf = document.getElementById('userCpf').value;
+                const phone = document.getElementById('userPhone').value;
+                const address = document.getElementById('userAddress').value;
+                
+                // Create new user object
+                const newUser = {
+                    id: users.length + 1,
+                    name,
+                    email,
+                    password,
+                    type,
+                    cpf,
+                    phone,
+                    address
+                };
+                
+                // Add to users array
+                users.push(newUser);
+                
+                // Update table
+                populateUsersTable();
+                
+                // Show users page
+                showPage('usersPage');
+                
+                // Reset form
+                addUserForm.reset();
+            });
+        }
+
+        // Populate vehicles table
+        function populateVehiclesTable() {
+            const tableBody = document.getElementById('vehiclesTableBody');
+            
+            if (tableBody) {
+                tableBody.innerHTML = '';
+                
+                vehicles.forEach(vehicle => {
+                    const row = document.createElement('tr');
+                    
+                    // Status badge
+                    let statusText, statusClass;
+                    if (vehicle.status === 'available') {
+                        statusText = 'Disponível';
+                        statusClass = 'status-available';
+                    } else if (vehicle.status === 'rented') {
+                        statusText = 'Alugado';
+                        statusClass = 'status-rented';
+                    } else {
+                        statusText = 'Manutenção';
+                        statusClass = 'status-maintenance';
+                    }
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">${vehicle.model}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-gray-600">${vehicle.brand}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-gray-600">${vehicle.year}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-gray-600">${vehicle.plate}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs rounded-full ${statusClass} text-white">${statusText}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-gray-600">${vehicle.rentedBy || '-'}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="editVehicle(${vehicle.id})" class="text-red-600 hover:text-red-900 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteVehicle(${vehicle.id})" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+
+        // Populate users table
+        function populateUsersTable() {
+            const tableBody = document.getElementById('usersTableBody');
+            
+            if (tableBody) {
+                tableBody.innerHTML = '';
+                
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    
+                    // User type badge
+                    let typeText, typeClass;
+                    if (user.type === 'admin') {
+                        typeText = 'Administrador';
+                        typeClass = 'bg-purple-100 text-purple-800';
+                    } else if (user.type === 'manager') {
+                        typeText = 'Gerente';
+                        typeClass = 'bg-blue-100 text-blue-800';
+                    } else if (user.type === 'employee') {
+                        typeText = 'Funcionário';
+                        typeClass = 'bg-green-100 text-green-800';
+                    } else {
+                        typeText = 'Cliente';
+                        typeClass = 'bg-yellow-100 text-yellow-800';
+                    }
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">${user.name}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-gray-600">${user.email}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs rounded-full ${typeClass}">${typeText}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-gray-600">${user.cpf}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-gray-600">${user.phone}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="editUser(${user.id})" class="text-red-600 hover:text-red-900 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteUser(${user.id})" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+
+        // Show dashboard after login
+        function showDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'flex';
+            // Show vehicles page by default after login
+            showPage('vehiclesPage');
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+            // Reset any active page classes
+            document.querySelectorAll('.page').forEach(page => {
+                if (page.id !== 'dashboard') {
+                    page.classList.remove('active');
+                }
+            });
+        }
+
+        // Show specific page
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                if (page.id !== 'dashboard') {
+                    page.classList.remove('active');
+                }
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Show modal
+        function showAddDocumentModal() {
+            document.getElementById('addDocumentModal').classList.remove('hidden');
+        }
+
+        function showAddMaintenanceModal() {
+            document.getElementById('addMaintenanceModal').classList.remove('hidden');
+        }
+
+        // Hide modal
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Edit vehicle (placeholder)
+        function editVehicle(id) {
+            alert(`Editar veículo com ID ${id}`);
+        }
+
+        // Delete vehicle (placeholder)
+        function deleteVehicle(id) {
+            if (confirm('Tem certeza que deseja excluir este veículo?')) {
+                alert(`Veículo com ID ${id} excluído`);
+            }
+        }
+
+        // Edit user (placeholder)
+        function editUser(id) {
+            alert(`Editar usuário com ID ${id}`);
+        }
+
+        // Delete user (placeholder)
+        function deleteUser(id) {
+            if (confirm('Tem certeza que deseja excluir este usuário?')) {
+                alert(`Usuário com ID ${id} excluído`);
+            }
+        }
+    </script>
+</body>
+</html>
